@@ -1,11 +1,9 @@
 import requests
+from secrets import API_KEY
 
-
-API_KEY = 'AIzaSyD8h3TbuR_HIIrP9jd9khgzCEtIbAXdQ58'
 
 BASE_URL = 'https://www.googleapis.com/youtube/'
 api_version = 'v3'
-
 username = 'McBacon1337'
 
 # https://developers.google.com/youtube/v3/docs/channels/list#try-it
@@ -17,8 +15,8 @@ def get_playlist_id(username):
         '&key=%(API_KEY)s'
 
     composed_url =  URL % {'part': part,
-                          'username': username,
-                          'API_KEY': API_KEY}
+                           'username': username,
+                           'API_KEY': API_KEY}
 
     resp = requests.get(composed_url)
     return resp.json()['items'][0]['contentDetails']['relatedPlaylists']['uploads']
