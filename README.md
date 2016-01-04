@@ -8,5 +8,5 @@
    per-video:    views count, likes
 
 - compare and analyze statistics. Some kind of sort.
-- 
+
 - move to web? (django, i suppose)
