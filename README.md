@@ -7,6 +7,6 @@
    per-channel:  views count, likes. Qty of subscribers.
    per-video:    views count, likes
 
-- compare and analyze statistics. Some kind of sort.
+- compare and analyze statistics. Add some kind of sorting.
 
 - move to web? (django, i suppose)
