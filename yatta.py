@@ -1,4 +1,5 @@
 import requests
+from collections import namedtuple
 from secrets import API_KEY
 
 
@@ -23,7 +24,7 @@ def get_playlist_id(username):
 
 
 # https://developers.google.com/youtube/v3/docs/playlistItems/list
-def get_video_attrs(playlistId):
+def get_video_title_and_id(playlistId):
     part = 'snippet'
     URL = BASE_URL + api_version + '/playlistItems?' \
         'part=%(part)s' \
@@ -36,13 +37,17 @@ def get_video_attrs(playlistId):
                           'API_KEY': API_KEY}
 
     resp = requests.get(composed_url)
-    items = resp.json()['items']
+    json_items = resp.json()['items']
 
     videos = []
-    for position, video in enumerate(items[::-1]):
-        videos.append((position,
-                       video['snippet']['title'],
-                       video['snippet']['resourceId']['videoId']))
+    Vid = namedtuple('video', 'title videoId')
+    for count, video in enumerate(json_items[::-1]):
+        v = Vid(title=video['snippet']['title'],
+                videoId=video['snippet']['resourceId']['videoId'])
+        videos.append(v)
+    #     videos.append((count,
+    #                    video['snippet']['title'],
+    #                    video['snippet']['resourceId']['videoId']))
 
     return videos
 
@@ -84,18 +89,8 @@ def channel_statistics(username):
 
 if __name__ == "__main__":
     playlistId = get_playlist_id(username)
-    video_attrs = get_video_attrs(playlistId)
+    # video_attrs = get_video_title_and_id(playlistId)
+
     # for vid in video_attrs:
 
     # title, views, likes
-
-
-# TODO: Get rid of maxresults=50 limit in get_video_attrs()
-# To do that i probably need to use Oauth2.
-# And i need "youtube" object, created with some YT library,
-# something like this:
-# youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-#                 http=credentials.authorize(httplib2.Http()))
-# Example code could be found here:
-# https://developers.google.com/youtube/v3/docs/playlistItems/list
-# This it to get to youtube.playlistItems().list_next() method
