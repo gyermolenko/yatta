@@ -39,28 +39,33 @@ def get_video_title_and_id(playlistId):
     resp = requests.get(composed_url)
     json_items = resp.json()['items']
 
-    videos = []
-    Vid = namedtuple('video', 'title videoId')
-    for count, video in enumerate(json_items[::-1]):
-        v = Vid(title=video['snippet']['title'],
-                videoId=video['snippet']['resourceId']['videoId'])
-        videos.append(v)
-    #     videos.append((count,
-    #                    video['snippet']['title'],
-    #                    video['snippet']['resourceId']['videoId']))
+    video_attributes = []
+    for item in json_items:
+        v = {}
+        v['title'] = item['snippet']['title']
+        v['videoId'] = item['snippet']['resourceId']['videoId']
+        video_attributes.append(v)
 
-    return videos
+    return video_attributes
 
 
 # https://developers.google.com/youtube/v3/docs/videos/list#try-it
-def get_video_info(videoId):
+def get_video_views_and_likes(videoId):
     part = 'statistics'
     URL = BASE_URL + api_version + '/videos?' \
         'part=%(part)s' \
         '&id=%(videoId)s' \
         '&key=%(API_KEY)s'
-    # viewcount
-    # likeCount
+
+    composed_url = URL % {'part': part,
+                          'videoId': videoId,
+                          'API_KEY': API_KEY}
+
+    resp = requests.get(composed_url)
+    json_items = resp.json()['items']
+    stats = json_items[0]['statistics']
+
+    return stats['viewCount'], stats['likeCount']
 
 
 def channel_statistics(username):
@@ -71,26 +76,27 @@ def channel_statistics(username):
         '&key=%(API_KEY)s'
 
     composed_url = URL % {'part': part,
-                          'forUsername': username,
+                          'username': username,
                           'API_KEY': API_KEY}
 
     resp = requests.get(composed_url)
-    return resp.json()['items'][0]['statistics']
+    stats = resp.json()['items'][0]['statistics']
 
-# viewCount
-# subscriberCount
-# videoCount
+    channel_stats = {}
+    channel_stats['viewCount'] = stats['viewCount']
+    channel_stats['subsciberCount'] = stats['subscriberCount']
+    channel_stats['videoCount'] = stats['videoCount']
 
-# what am i interested in?
-#     number of videos overall
-#     number of subscribers
-#     viewcount for each video
-#     likes for each vid
+    return channel_stats
+
 
 if __name__ == "__main__":
     playlistId = get_playlist_id(username)
-    # video_attrs = get_video_title_and_id(playlistId)
+    # playlistId = 'UUqJ-Xo29CKyLTjn6z2XwYAw'
+    # his_last_vid_id = 'EFvbN3K6EA8'
 
-    # for vid in video_attrs:
+    # videos = get_video_title_and_id(playlistId)
+    # for v in videos:
+    #     v['views'], v['likes'] = get_video_views_and_likes(v['videoId'])
 
-    # title, views, likes
+    channel_stats = channel_statistics(username)
