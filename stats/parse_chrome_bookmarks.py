@@ -18,11 +18,11 @@ from bs4 import BeautifulSoup
 
 
 folder_name = 'Unsubscribed_yt'
-chrome_bookmark_file = 'bookmarks_1_10_16.html'
+chrome_bookmark_file = 'bookmarks_3_26_16.html'
 parsed_bookmarks = 'parsed_bookmarks.txt'
 parsed_usernames = 'usernames.txt'
 
-soup = BeautifulSoup(open(chrome_bookmark_file))
+soup = BeautifulSoup(open(chrome_bookmark_file), "lxml")
 
 DT = soup.find('h3', text=folder_name).parent
 DL = DT.find_next_sibling()

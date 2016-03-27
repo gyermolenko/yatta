@@ -1,2 +1,8 @@
-secrets.py
+.gitignore
 *.pyc
+env/
+main/settings_local.py
+stats/secrets.py
+stats/bookmarks_*.html
+stats/_helper_files/
+db.sqlite3
