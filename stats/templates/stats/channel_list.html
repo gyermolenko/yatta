@@ -1,0 +1,11 @@
+<ol>
+    {% for channel in channels %}
+        <li>{{ channel.username }} -- {{ channel.playlist_id }}</li>
+    {% endfor %}
+</ol>
+<div>
+    {% if user.is_authenticated %}
+        <a href="{% url 'channel_add' %}">+</a>
+        {# <a href="{% url 'channel_add' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a> #}
+    {% endif %}
+</div>
