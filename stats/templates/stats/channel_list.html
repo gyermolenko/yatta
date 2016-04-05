@@ -1,11 +1,22 @@
-<ol>
+<table border="1" cellspacing="1" cellpadding="5">
+    <tr>
+        <th>Username</th>
+        <th>Playlist ID</th>
+    </tr>
     {% for channel in channels %}
-        <li>{{ channel.username }} -- {{ channel.playlist_id }}</li>
+    <tr>
+        {# <td><a href="{% url 'channel_info'%}">{{ channel.username }}</a></td> #}
+        <td><a href="{% url 'channel_info' channel.id  %}">{{ channel.username }}</a></td>
+        <td>{{ channel.playlist_id }}</td>
+    </tr>
     {% endfor %}
-</ol>
+</table>
+
 <div>
     {% if user.is_authenticated %}
-        <a href="{% url 'channel_add' %}">+</a>
+        <a href="{% url 'channel_add' %}" style="text-decoration: none">[<b>+</b>]</a>
         {# <a href="{% url 'channel_add' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a> #}
+    {% else %}
+        [please authenticate to add more]
     {% endif %}
 </div>
