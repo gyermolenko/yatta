@@ -7,7 +7,9 @@
    - ~~per-channel:  views count, likes. Qty of subscribers.~~
    - ~~per-video:    views count, likes~~
 
-- integrate Django
+- [in progress] integrate Django
+       
+       currently only 1 of 4 created functions run from web
 - put all gathered data into DB
 - deploy minimum viable product to pythonanywhere.com
 - compare and analyze statistics for different YT users. Add some kind of sorting (e.g. by popularity).
