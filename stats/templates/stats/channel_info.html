@@ -1,1 +1,21 @@
-hi, {{ n }}
+<h1>Channel info</h1>
+
+<br> <br>
+
+<form method="post">
+    {% csrf_token %}
+    <button name="button" value="submit" type="submit">Get videos</button>
+</form>
+
+<table border="1" cellspacing="1" cellpadding="5">
+    <tr>
+        <th>Title</th>
+        <th>Video ID</th>
+    </tr>
+    {% for video in videos %}
+    <tr>
+        <td>{{ video.title }}</td>
+        <td>{{ video.video_id }}</td>
+    </tr>
+    {% endfor %}
+</table>

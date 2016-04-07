@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import Channel
+from .models import Channel, Video
 from .forms import ChannelForm
 
-from .yatta import get_playlist_id
+from .yatta import get_playlist_id, channel_statistics, \
+                   get_video_title_and_id, get_video_views_and_likes
 
 
 def channel_list(request):
@@ -24,5 +25,19 @@ def channel_add(request):
 
 
 def channel_info(request, pk):
-    return render(request, 'stats/channel_info.html', {'n': pk})
+    videos = Video.objects.filter(channel_id=pk)
+
+    if request.method == 'POST':
+        playlist_id = Channel.objects.get(pk=pk).playlist_id
+        channel_videos = get_video_title_and_id(playlist_id)
+
+        new_videos = []
+        for vid in channel_videos:
+            v = Video(video_id=vid['videoId'], title=vid['title'], channel_id=pk)
+            new_videos.append(v)
+        Video.objects.bulk_create(new_videos)
+
+        return redirect('channel_info', pk=pk)
+
+    return render(request, 'stats/channel_info.html', {'videos': videos})
 
