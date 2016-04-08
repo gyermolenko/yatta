@@ -3,7 +3,7 @@ from .models import Channel, Video
 from .forms import ChannelForm
 
 from .yatta import get_playlist_id, channel_statistics, \
-                   get_video_title_and_id, get_video_views_and_likes
+                   get_videos_meta_info, get_video_views_and_likes
 
 
 def channel_list(request):
@@ -29,12 +29,14 @@ def channel_info(request, pk):
 
     if request.method == 'POST':
         playlist_id = Channel.objects.get(pk=pk).playlist_id
-        channel_videos = get_video_title_and_id(playlist_id)
+        channel_videos_meta = get_videos_meta_info(playlist_id)
 
         new_videos = []
-        for vid in channel_videos:
-            v = Video(video_id=vid['videoId'], title=vid['title'], channel_id=pk)
-            new_videos.append(v)
+        ids_from_db = [vid.video_id for vid in videos]
+        for vid in channel_videos_meta:
+            if vid['video_id'] not in ids_from_db:
+                v = Video(video_id=vid['video_id'], title=vid['title'], channel_id=pk)
+                new_videos.append(v)
         Video.objects.bulk_create(new_videos)
 
         return redirect('channel_info', pk=pk)

@@ -45,29 +45,33 @@ def channel_statistics(username):
 
 
 # https://developers.google.com/youtube/v3/docs/playlistItems/list
-def get_video_title_and_id(playlistId):
+def get_videos_meta_info(playlistId):
     part = 'snippet'
+    fields = 'items/snippet'
     URL = BASE_URL + api_version + '/playlistItems?' \
         'part=%(part)s' \
+        '&fields=%(fields)s' \
         '&playlistId=%(playlistId)s' \
         '&key=%(API_KEY)s' \
         '&maxResults=50'
 
     composed_url = URL % {'part': part,
+                          'fields': fields,
                           'playlistId': playlistId,
                           'API_KEY': API_KEY}
 
     resp = requests.get(composed_url)
     json_items = resp.json()['items']
 
-    video_attributes = []
+    video_meta_info = []
     for item in json_items:
         v = {}
         v['title'] = item['snippet']['title']
-        v['videoId'] = item['snippet']['resourceId']['videoId']
-        video_attributes.append(v)
+        v['video_id'] = item['snippet']['resourceId']['videoId']
+        v['published_at'] = item['snippet']['publishedAt']
+        video_meta_info.append(v)
 
-    return video_attributes
+    return video_meta_info
 
 
 # https://developers.google.com/youtube/v3/docs/videos/list#try-it
@@ -95,7 +99,8 @@ if __name__ == "__main__":
     # his_last_vid_id = 'EFvbN3K6EA8'
     channel_stats = channel_statistics(username)
 
-    # videos = get_video_title_and_id(playlistId)
+    # published_at '2016-03-09T13:21:32.000Z'
+    # videos = get_videos_meta_info(playlistId)
     # for v in videos:
     #     v['views'], v['likes'] = get_video_views_and_likes(v['videoId'])
 
