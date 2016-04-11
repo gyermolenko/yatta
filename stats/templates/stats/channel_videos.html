@@ -1,11 +1,14 @@
-<h1>Channel info</h1>
+{% extends "main/base.html" %}
+
+{% block content %}
+<h1>Channel videos</h1>
 
 <form method="post">
     {% csrf_token %}
     <button name="button" value="submit" type="submit">Get videos</button>
 </form>
 
-<table border="1" cellspacing="1" cellpadding="5">
+<table border="1" cellspacing="2" cellpadding="5">
     <tr>
         <th>Title</th>
         <th>Video ID</th>
@@ -19,3 +22,4 @@
     </tr>
     {% endfor %}
 </table>
+{% endblock content %}

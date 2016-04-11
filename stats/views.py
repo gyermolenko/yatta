@@ -24,7 +24,7 @@ def channel_add(request):
     return render(request, 'stats/channel_add.html', {'form': form})
 
 
-def channel_info(request, pk):
+def channel_videos(request, pk):
     videos = Video.objects.filter(channel_id=pk).order_by('-published_at')
 
     if request.method == 'POST':
@@ -44,7 +44,7 @@ def channel_info(request, pk):
                 new_videos.append(v)
         Video.objects.bulk_create(new_videos)
 
-        return redirect('channel_info', pk=pk)
+        return redirect('channel_videos', pk=pk)
 
-    return render(request, 'stats/channel_info.html', {'videos': videos})
+    return render(request, 'stats/channel_videos.html', {'videos': videos})
 

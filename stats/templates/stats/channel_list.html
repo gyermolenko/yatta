@@ -1,22 +1,26 @@
-<table border="1" cellspacing="1" cellpadding="5">
+{% extends "main/base.html" %}
+
+{% block content %}
+
+<div>
+    {% if user.is_authenticated %}
+        <a href="{% url 'channel_add' %}"><span class="glyphicon glyphicon-plus"></span></a>
+    {% else %}
+        [please authenticate to add more]
+    {% endif %}
+</div>
+
+<table border="1" cellspacing="2" cellpadding="5">
     <tr>
         <th>Username</th>
         <th>Playlist ID</th>
     </tr>
     {% for channel in channels %}
     <tr>
-        {# <td><a href="{% url 'channel_info'%}">{{ channel.username }}</a></td> #}
-        <td><a href="{% url 'channel_info' channel.id  %}">{{ channel.username }}</a></td>
+        <td><a href="{% url 'channel_videos' channel.id  %}">{{ channel.username }}</a></td>
         <td>{{ channel.playlist_id }}</td>
     </tr>
     {% endfor %}
 </table>
 
-<div>
-    {% if user.is_authenticated %}
-        <a href="{% url 'channel_add' %}" style="text-decoration: none">[<b>+</b>]</a>
-        {# <a href="{% url 'channel_add' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a> #}
-    {% else %}
-        [please authenticate to add more]
-    {% endif %}
-</div>
+{% endblock content %}
