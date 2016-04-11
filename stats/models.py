@@ -21,6 +21,7 @@ class Video(BaseModel):
     video_id = models.CharField(max_length=11, unique=True)
     title = models.CharField(max_length=255)
     channel = models.ForeignKey(Channel)
+    published_at = models.DateTimeField(null=True)
 
 
 class ChannelStatistics(BaseModel):

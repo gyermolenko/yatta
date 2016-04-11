@@ -25,7 +25,7 @@ def channel_add(request):
 
 
 def channel_info(request, pk):
-    videos = Video.objects.filter(channel_id=pk)
+    videos = Video.objects.filter(channel_id=pk).order_by('-published_at')
 
     if request.method == 'POST':
         playlist_id = Channel.objects.get(pk=pk).playlist_id
@@ -35,7 +35,12 @@ def channel_info(request, pk):
         ids_from_db = [vid.video_id for vid in videos]
         for vid in channel_videos_meta:
             if vid['video_id'] not in ids_from_db:
-                v = Video(video_id=vid['video_id'], title=vid['title'], channel_id=pk)
+                v = Video(
+                    video_id=vid['video_id'],
+                    title=vid['title'],
+                    published_at=vid['published_at'],
+                    channel_id=pk
+                )
                 new_videos.append(v)
         Video.objects.bulk_create(new_videos)
 

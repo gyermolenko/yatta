@@ -9,11 +9,13 @@
     <tr>
         <th>Title</th>
         <th>Video ID</th>
+        <th>Published at</th>
     </tr>
     {% for video in videos %}
     <tr>
         <td>{{ video.title }}</td>
         <td>{{ video.video_id }}</td>
+        <td>{{ video.published_at|date:"Y-m-d, H:i:s" }}</td>
     </tr>
     {% endfor %}
 </table>
