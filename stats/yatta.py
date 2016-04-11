@@ -38,7 +38,7 @@ def channel_statistics(username):
 
     channel_stats = {}
     channel_stats['viewCount'] = stats['viewCount']
-    channel_stats['subsciberCount'] = stats['subscriberCount']
+    channel_stats['subscriberCount'] = stats['subscriberCount']
     channel_stats['videoCount'] = stats['videoCount']
 
     return channel_stats

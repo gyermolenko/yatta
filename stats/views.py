@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Channel, Video
+from .models import Channel, Video, ChannelStatistics, VideoStatistics
 from .forms import ChannelForm
 
 from .yatta import get_playlist_id, channel_statistics, \
@@ -8,7 +8,24 @@ from .yatta import get_playlist_id, channel_statistics, \
 
 def channel_list(request):
     channels = Channel.objects.all()
-    return render(request, 'stats/channel_list.html', {'channels': channels})
+    statistics = ChannelStatistics.objects.all()
+
+    if request.method == 'POST':
+        new_stats = []
+        for channel in channels:
+            stats = channel_statistics(channel.username)
+
+            cs = ChannelStatistics(
+                total_view_count=stats['viewCount'],
+                subscriber_count=stats['subscriberCount'],
+                video_count=stats['videoCount'],
+                channel_id=channel.id,
+            )
+            new_stats.append(cs)
+
+        ChannelStatistics.objects.bulk_create(new_stats)
+
+    return render(request, 'stats/channel_list.html', {'channels': channels, 'statistics': statistics})
 
 
 def channel_add(request):

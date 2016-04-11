@@ -26,9 +26,9 @@ class Video(BaseModel):
 
 class ChannelStatistics(BaseModel):
     total_view_count = models.IntegerField()
-    subsciber_count = models.IntegerField()
+    subscriber_count = models.IntegerField()
     video_count = models.IntegerField()
-    channel = models.ForeignKey(Channel)
+    channel = models.ForeignKey(Channel, related_name='statistics')
     # date of last upload
 
 

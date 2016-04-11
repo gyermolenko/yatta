@@ -12,15 +12,24 @@
 
 <table border="1" cellspacing="2" cellpadding="5">
     <tr>
-        <th>Username</th>
-        <th>Playlist ID</th>
+        <th>Channel</th>
+        <th>Total view count</th>
+        <th>Video count</th>
+        <th>Subscriber count</th>
     </tr>
-    {% for channel in channels %}
+    {% for stat in statistics %}
     <tr>
-        <td><a href="{% url 'channel_videos' channel.id  %}">{{ channel.username }}</a></td>
-        <td>{{ channel.playlist_id }}</td>
+        <td><a href="{% url 'channel_videos' stat.channel.id  %}">{{ stat.channel.username }}</a></td>
+        <td>{{ stat.total_view_count }}</td>
+        <td>{{ stat.video_count }}</td>
+        <td>{{ stat.subscriber_count }}</td>
     </tr>
     {% endfor %}
 </table>
+
+<form method="post">
+    {% csrf_token %}
+    <button name="button" value="submit" type="submit">Refresh statistics</button>
+</form>
 
 {% endblock content %}
