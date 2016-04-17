@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.db.models import Max
+
 from .models import Channel, Video, ChannelStatistics, VideoStatistics
 from .forms import ChannelForm
 
@@ -7,10 +9,12 @@ from .yatta import get_playlist_id, channel_statistics, \
 
 
 def channel_list(request):
-    channels = Channel.objects.all()
-    statistics = ChannelStatistics.objects.all()
+    latest_stats_ids = Channel.objects.annotate(latest_stats_id=Max('statistics__id')) \
+                                      .values_list('latest_stats_id', flat=True)
+    statistics = ChannelStatistics.objects.filter(id__in=latest_stats_ids)
 
     if request.method == 'POST':
+        channels = Channel.objects.all()
         new_stats = []
         for channel in channels:
             stats = channel_statistics(channel.username)
@@ -25,7 +29,7 @@ def channel_list(request):
 
         ChannelStatistics.objects.bulk_create(new_stats)
 
-    return render(request, 'stats/channel_list.html', {'channels': channels, 'statistics': statistics})
+    return render(request, 'stats/channel_list.html', {'statistics': statistics})
 
 
 def channel_add(request):
