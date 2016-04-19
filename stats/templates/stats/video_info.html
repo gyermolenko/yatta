@@ -1,0 +1,29 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<h1>{{ video.title }}</h1>
+
+{% if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        <button name="button" value="submit" type="submit">Get video info</button>
+    </form>
+{% else %}
+    [please authenticate to update]
+{% endif %}
+
+<table border="1" cellspacing="2" cellpadding="5">
+    <tr>
+        <th>At date</th>
+        <th>Views</th>
+        <th>Likes</th>
+    </tr>
+    {% for vs in video_stats %}
+    <tr>
+        <td>{{ vs.date_added|date:"Y-m-d, H:i:s" }}</td>
+        <td>{{ vs.view_count }}</td>
+        <td>{{ vs.like_count }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

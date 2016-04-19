@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 
 folder_name = 'Unsubscribed_yt'
-chrome_bookmark_file = 'bookmarks_3_26_16.html'
+chrome_bookmark_file = 'bookmarks_4_17_16.html'
 parsed_bookmarks = 'parsed_bookmarks.txt'
 parsed_usernames = 'usernames.txt'
 
@@ -41,7 +41,7 @@ for url in urls:
     if '/channel/' not in url and url.split('/')[-1] == 'videos':
         usernames.append(url.split('/')[-2])
     else:
-        usernames.append(ERROR_MSG)
+        usernames.append(ERROR_MSG+url)
 
 with open(parsed_usernames, 'w+') as f:
     for name in usernames:

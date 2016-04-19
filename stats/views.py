@@ -69,3 +69,17 @@ def channel_videos(request, pk):
 
     return render(request, 'stats/channel_videos.html', {'videos': videos})
 
+
+def video_info(request, pk):
+    video = Video.objects.get(pk=pk)
+    video_stats = VideoStatistics.objects.filter(video_id=pk)
+
+    if request.method == 'POST':
+        views, likes = get_video_views_and_likes(video.video_id)
+        vs = VideoStatistics(view_count=views, like_count=likes, video=video)
+        vs.save()
+
+        return redirect('video_info', pk=pk)
+
+    return render(request, 'stats/video_info.html',
+                  {'video': video, 'video_stats': video_stats})

@@ -3,10 +3,14 @@
 {% block content %}
 <h1>Channel videos</h1>
 
-<form method="post">
-    {% csrf_token %}
-    <button name="button" value="submit" type="submit">Get videos</button>
-</form>
+{% if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        <button name="button" value="submit" type="submit">Get videos</button>
+    </form>
+{% else %}
+    [please authenticate to update]
+{% endif %}
 
 <table border="1" cellspacing="2" cellpadding="5">
     <tr>
@@ -16,7 +20,7 @@
     </tr>
     {% for video in videos %}
     <tr>
-        <td>{{ video.title }}</td>
+        <td><a href="{% url 'video_info' video.id %}">{{ video.title }}</a></td>
         <td>{{ video.video_id }}</td>
         <td>{{ video.published_at|date:"Y-m-d, H:i:s" }}</td>
     </tr>

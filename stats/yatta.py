@@ -19,7 +19,9 @@ def get_playlist_id(username):
                            'API_KEY': API_KEY}
 
     resp = requests.get(composed_url)
-    return resp.json()['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+    playlist_id = resp.json()['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+
+    return playlist_id
 
 
 def channel_statistics(username):
