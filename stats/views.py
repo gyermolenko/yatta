@@ -41,9 +41,19 @@ def channel_add(request):
             new_channel = form.save(commit=False)
             new_channel.playlist_id = get_playlist_id(new_channel.username)
             new_channel.save()
+
+            stats = channel_statistics(new_channel.username)
+            cs = ChannelStatistics(
+                total_view_count=stats['viewCount'],
+                subscriber_count=stats['subscriberCount'],
+                video_count=stats['videoCount'],
+                channel_id=new_channel.id,
+            )
+            cs.save()
             return redirect('channel_list')
     else:
         form = ChannelForm()
+
     return render(request,
                   'stats/channel_add.html',
                   {'form': form})
