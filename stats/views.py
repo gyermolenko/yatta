@@ -29,7 +29,9 @@ def channel_list(request):
 
         ChannelStatistics.objects.bulk_create(new_stats)
 
-    return render(request, 'stats/channel_list.html', {'statistics': statistics})
+    return render(request,
+                  'stats/channel_list.html',
+                  {'statistics': statistics})
 
 
 def channel_add(request):
@@ -42,11 +44,14 @@ def channel_add(request):
             return redirect('channel_list')
     else:
         form = ChannelForm()
-    return render(request, 'stats/channel_add.html', {'form': form})
+    return render(request,
+                  'stats/channel_add.html',
+                  {'form': form})
 
 
 def channel_videos(request, pk):
     videos = Video.objects.filter(channel_id=pk).order_by('-published_at')
+    channel = Channel.objects.get(pk=pk)
 
     if request.method == 'POST':
         playlist_id = Channel.objects.get(pk=pk).playlist_id
@@ -67,7 +72,9 @@ def channel_videos(request, pk):
 
         return redirect('channel_videos', pk=pk)
 
-    return render(request, 'stats/channel_videos.html', {'videos': videos})
+    return render(request,
+                  'stats/channel_videos.html',
+                  {'videos': videos, 'channel': channel.username})
 
 
 def video_info(request, pk):
@@ -81,5 +88,6 @@ def video_info(request, pk):
 
         return redirect('video_info', pk=pk)
 
-    return render(request, 'stats/video_info.html',
+    return render(request,
+                  'stats/video_info.html',
                   {'video': video, 'video_stats': video_stats})

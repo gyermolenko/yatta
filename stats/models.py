@@ -23,6 +23,9 @@ class Video(BaseModel):
     channel = models.ForeignKey(Channel)
     published_at = models.DateTimeField(null=True)
 
+    def __str__(self):
+        return self.title
+
 
 class ChannelStatistics(BaseModel):
     total_view_count = models.IntegerField()
