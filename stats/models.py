@@ -10,7 +10,7 @@ class BaseModel(models.Model):
 
 
 class Channel(BaseModel):
-    username = models.CharField(max_length=50)
+    username = models.CharField(max_length=50, unique=True)
     playlist_id = models.CharField(max_length=32)
 
     def __str__(self):
@@ -22,6 +22,9 @@ class Video(BaseModel):
     title = models.CharField(max_length=255)
     channel = models.ForeignKey(Channel)
     published_at = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return self.title
 
 
 class ChannelStatistics(BaseModel):
