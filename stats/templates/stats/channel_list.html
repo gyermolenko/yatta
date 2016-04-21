@@ -29,7 +29,12 @@
 
 <form method="post">
     {% csrf_token %}
-    <button name="button" value="submit" type="submit">Refresh statistics</button>
+    {{ form.as_p }}
+    {% if user.is_authenticated %}
+        <button name="button" value="submit" type="submit">Refresh statistics</button>
+    {% else %}
+        [please authenticate to add more]
+    {% endif %}
 </form>
 
 {% endblock content %}
