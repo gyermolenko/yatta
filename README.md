@@ -10,7 +10,7 @@
 - ~~integrate Django~~
 
 - ~~deploy minimum viable product to pythonanywhere.com~~
-http://gryermolenko.pythonanywhere.com/channels/
+http://gyermolenko.pythonanywhere.com/channels/
 
 - put all gathered data into DB
 - compare and analyze statistics for different YT users. Add some kind of sorting (e.g. by popularity).
