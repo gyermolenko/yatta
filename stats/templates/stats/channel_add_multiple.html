@@ -1,0 +1,14 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<h1>Add multiple channels</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if user.is_authenticated %}
+        <button type="submit">Save</button>
+    {% else %}
+        [please authenticate to add more]
+    {% endif %}
+</form>
+{% endblock content %}

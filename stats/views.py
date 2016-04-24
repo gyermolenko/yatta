@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Max
 
 from .models import Channel, Video, ChannelStatistics, VideoStatistics
-from .forms import ChannelForm
+from .forms import AddOneChannelForm, AddMultipleChannelsForm
 
 from .yatta import get_playlist_id, channel_statistics, \
                    get_videos_meta_info, get_video_views_and_likes
@@ -56,6 +56,36 @@ def channel_add(request):
 
     return render(request,
                   'stats/channel_add.html',
+                  {'form': form})
+
+
+def channel_add_multiple(request):
+    if request.method == 'POST':
+        form = AddMultipleChannelsForm(request.POST)
+        present_channelnames = [cn.username for cn in Channel.objects.all()]
+
+        if form.is_valid():
+            cleaned_channelnames = form.cleaned_data['usernames']
+            names_to_add = [cc for cc in cleaned_channelnames.split() if cc not in present_channelnames]
+            channels_to_add = [Channel(username=name, playlist_id=get_playlist_id(name)) for name in names_to_add]
+            Channel.objects.bulk_create(channels_to_add)
+
+            # stats = channel_statistics(new_channel.username)
+            # cs = ChannelStatistics(
+            #     total_view_count=stats['viewCount'],
+            #     subscriber_count=stats['subscriberCount'],
+            #     video_count=stats['videoCount'],
+            #     channel_id=new_channel.id,
+            # )
+            # cs.save()
+
+            return redirect('channel_list')
+
+    else:
+        form = AddMultipleChannelsForm()
+
+    return render(request,
+                  'stats/channel_add_multiple.html',
                   {'form': form})
 
 
