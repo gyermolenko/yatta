@@ -23,6 +23,7 @@
         <th>Total view count</th>
         <th>Video count</th>
         <th>Subscriber count</th>
+        <th>Chart</th>
     </tr>
     {% for stat in statistics %}
     <tr>
@@ -30,6 +31,7 @@
         <td>{{ stat.total_view_count }}</td>
         <td>{{ stat.video_count }}</td>
         <td>{{ stat.subscriber_count }}</td>
+        <td><a href="{% url 'channel_chart' stat.channel.id %}">link</a></td>
     </tr>
     {% endfor %}
 </table>

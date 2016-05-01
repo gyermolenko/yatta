@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+    {{ block.super }}
+    <script>
+        var series = {{ series|safe }}
+    </script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="{% static 'js/chart.js' %}"></script>
+{% endblock head %}
+
+{% block content %}
+{# <h1>"{{ statistics.channel  }}" chart</h1> #}
+
+<table border="1" cellspacing="2" cellpadding="5">
+    <tr>
+        <th>Title</th>
+        <th>View count</th>
+        <th>Like count</th>
+        <th>Published</th>
+    </tr>
+    {% for stat in statistics %}
+        <tr>
+            <td>{{ stat.video.title }}</td>
+            <td>{{ stat.view_count }}</td>
+            <td>{{ stat.like_count }}</td>
+            <td>{{ stat.video.published_at|date:"Y-m-d, H:i:s"  }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<div id="chart_container"></div>
+
+{% endblock content %}

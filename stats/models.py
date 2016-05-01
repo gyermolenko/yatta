@@ -38,4 +38,4 @@ class ChannelStatistics(BaseModel):
 class VideoStatistics(BaseModel):
     view_count = models.IntegerField()
     like_count = models.IntegerField()
-    video = models.ForeignKey(Video)
+    video = models.ForeignKey(Video, related_name='statistics')
