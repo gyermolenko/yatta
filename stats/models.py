@@ -20,7 +20,7 @@ class Channel(BaseModel):
 class Video(BaseModel):
     video_id = models.CharField(max_length=11, unique=True)
     title = models.CharField(max_length=255)
-    channel = models.ForeignKey(Channel)
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     published_at = models.DateTimeField(null=True)
 
     def __str__(self):
@@ -31,11 +31,11 @@ class ChannelStatistics(BaseModel):
     total_view_count = models.IntegerField()
     subscriber_count = models.IntegerField()
     video_count = models.IntegerField()
-    channel = models.ForeignKey(Channel, related_name='statistics')
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name='statistics')
     # date of last upload
 
 
 class VideoStatistics(BaseModel):
     view_count = models.IntegerField()
     like_count = models.IntegerField()
-    video = models.ForeignKey(Video, related_name='statistics')
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='statistics')
