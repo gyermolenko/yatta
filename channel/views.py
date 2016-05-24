@@ -32,13 +32,13 @@ def channel_list(request):
         ChannelStatistics.objects.bulk_create(new_stats)
 
     return render(request,
-                  'stats/channel_list.html',
+                  'channel/channel_list.html',
                   {'statistics': statistics})
 
 
 def channel_add(request):
     if request.method == 'POST':
-        form = ChannelForm(request.POST)
+        form = AddOneChannelForm(request.POST)
         if form.is_valid():
             new_channel = form.save(commit=False)
             new_channel.playlist_id = get_playlist_id(new_channel.username)
@@ -54,10 +54,10 @@ def channel_add(request):
             cs.save()
             return redirect('channel_list')
     else:
-        form = ChannelForm()
+        form = AddOneChannelForm()
 
     return render(request,
-                  'stats/channel_add.html',
+                  'channel/channel_add.html',
                   {'form': form})
 
 
@@ -87,7 +87,7 @@ def channel_add_multiple(request):
         form = AddMultipleChannelsForm()
 
     return render(request,
-                  'stats/channel_add_multiple.html',
+                  'channel/channel_add_multiple.html',
                   {'form': form})
 
 
@@ -115,7 +115,7 @@ def channel_videos(request, pk):
         return redirect('channel_videos', pk=pk)
 
     return render(request,
-                  'stats/channel_videos.html',
+                  'channel/channel_videos.html',
                   {'videos': videos, 'channelname': channel.username})
 
 
@@ -131,7 +131,7 @@ def video_info(request, pk):
         return redirect('video_info', pk=pk)
 
     return render(request,
-                  'stats/video_info.html',
+                  'channel/video_info.html',
                   {'video': video, 'video_stats': video_stats})
 
 
@@ -151,7 +151,7 @@ def channel_chart(request, pk):
     series.append(rec)
 
     return render(request,
-                  'stats/channel_chart.html',
+                  'channel/channel_chart.html',
                   {'statistics': statistics, 'series': series})
 
 

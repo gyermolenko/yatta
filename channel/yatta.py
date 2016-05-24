@@ -1,5 +1,5 @@
 import requests
-from .secrets import API_KEY
+from main.secrets import API_KEY
 
 
 BASE_URL = 'https://www.googleapis.com/youtube/'

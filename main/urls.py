@@ -5,5 +5,5 @@ from . import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.main_menu, name='main_menu'),
-    url(r'^channels/', include('stats.urls')),
+    url(r'^channel/', include('channel.urls')),
 ]
