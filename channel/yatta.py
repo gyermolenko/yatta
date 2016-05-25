@@ -24,7 +24,7 @@ def get_playlist_id(username):
     return playlist_id
 
 
-def channel_statistics(username):
+def get_channel_statistics(username):
     part = 'statistics'
     URL = BASE_URL + api_version + '/channels?' \
         'part=%(part)s' \
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     playlistId = get_playlist_id(username)
     # playlistId = 'UUqJ-Xo29CKyLTjn6z2XwYAw'
     # his_last_vid_id = 'EFvbN3K6EA8'
-    channel_stats = channel_statistics(username)
+    channel_stats = get_channel_statistics(username)
 
     # published_at '2016-03-09T13:21:32.000Z'
     # videos = get_videos_meta_info(playlistId)

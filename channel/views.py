@@ -6,7 +6,7 @@ from django.db.models import Max
 from .models import Channel, Video, ChannelStatistics, VideoStatistics
 from .forms import AddOneChannelForm, AddMultipleChannelsForm
 
-from .yatta import get_playlist_id, channel_statistics, \
+from .yatta import get_playlist_id, get_channel_statistics, \
                    get_videos_meta_info, get_video_views_and_likes
 
 
@@ -19,7 +19,7 @@ def channel_list(request):
         channels = Channel.objects.all()
         new_stats = []
         for channel in channels:
-            stats = channel_statistics(channel.username)
+            stats = get_channel_statistics(channel.username)
 
             cs = ChannelStatistics(
                 total_view_count=stats['viewCount'],
@@ -44,14 +44,9 @@ def channel_add(request):
             new_channel.playlist_id = get_playlist_id(new_channel.username)
             new_channel.save()
 
-            stats = channel_statistics(new_channel.username)
-            cs = ChannelStatistics(
-                total_view_count=stats['viewCount'],
-                subscriber_count=stats['subscriberCount'],
-                video_count=stats['videoCount'],
-                channel_id=new_channel.id,
-            )
-            cs.save()
+            _gather_channel_statistics(new_channel)
+            _gather_channel_videos(new_channel)
+            # _gather_video_stats()
             return redirect('channel_list')
     else:
         form = AddOneChannelForm()
@@ -72,7 +67,7 @@ def channel_add_multiple(request):
             channels_to_add = [Channel(username=name, playlist_id=get_playlist_id(name)) for name in names_to_add]
             Channel.objects.bulk_create(channels_to_add)
 
-            # stats = channel_statistics(new_channel.username)
+            # stats = get_channel_statistics(new_channel.username)
             # cs = ChannelStatistics(
             #     total_view_count=stats['viewCount'],
             #     subscriber_count=stats['subscriberCount'],
@@ -155,3 +150,33 @@ def channel_chart(request, pk):
                   {'statistics': statistics, 'series': series})
 
 
+
+def _gather_channel_statistics(new_channel):
+    stats = get_channel_statistics(new_channel.username)
+    cs = ChannelStatistics(
+        total_view_count=stats['viewCount'],
+        subscriber_count=stats['subscriberCount'],
+        video_count=stats['videoCount'],
+        channel_id=new_channel.id,
+    )
+    cs.save()
+
+
+def _gather_channel_videos(new_channel):
+    # playlist_id = Channel.objects.get(pk=pk).playlist_id
+    # videos = Video.objects.filter(channel_id=pk).order_by('-published_at')
+    # channel = Channel.objects.get(pk=pk)
+    channel_videos_meta = get_videos_meta_info(new_channel.playlist_id)
+    new_videos = []
+    # ids_from_db = [vid.video_id for vid in videos]
+    for vid in channel_videos_meta:
+        # if vid['video_id'] not in ids_from_db:
+        v = Video(
+            video_id=vid['video_id'],
+            title=vid['title'],
+            published_at=vid['published_at'],
+            channel_id=new_channel.id
+        )
+        new_videos.append(v)
+    Video.objects.bulk_create(new_videos)
+# def _gather_video_stats():
