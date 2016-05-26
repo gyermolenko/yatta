@@ -20,7 +20,7 @@ class Channel(BaseModel):
 class Video(BaseModel):
     video_id = models.CharField(max_length=11, unique=True)
     title = models.CharField(max_length=255)
-    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name='videos')
     published_at = models.DateTimeField(null=True)
 
     def __str__(self):

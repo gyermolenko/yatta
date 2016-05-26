@@ -45,8 +45,9 @@ def channel_add(request):
             new_channel.save()
 
             _gather_channel_statistics(new_channel)
-            _gather_channel_videos(new_channel)
-            # _gather_video_stats()
+            _gather_channel_videos_meta_info(new_channel)
+            _gather_channel_videos_views_and_likes(new_channel)
+
             return redirect('channel_list')
     else:
         form = AddOneChannelForm()
@@ -162,21 +163,25 @@ def _gather_channel_statistics(new_channel):
     cs.save()
 
 
-def _gather_channel_videos(new_channel):
-    # playlist_id = Channel.objects.get(pk=pk).playlist_id
-    # videos = Video.objects.filter(channel_id=pk).order_by('-published_at')
-    # channel = Channel.objects.get(pk=pk)
+def _gather_channel_videos_meta_info(new_channel):
     channel_videos_meta = get_videos_meta_info(new_channel.playlist_id)
     new_videos = []
-    # ids_from_db = [vid.video_id for vid in videos]
-    for vid in channel_videos_meta:
-        # if vid['video_id'] not in ids_from_db:
+    for video_meta in channel_videos_meta:
         v = Video(
-            video_id=vid['video_id'],
-            title=vid['title'],
-            published_at=vid['published_at'],
+            video_id=video_meta['video_id'],
+            title=video_meta['title'],
+            published_at=video_meta['published_at'],
             channel_id=new_channel.id
         )
         new_videos.append(v)
     Video.objects.bulk_create(new_videos)
-# def _gather_video_stats():
+
+
+def _gather_channel_videos_views_and_likes(new_channel):
+    videos = new_channel.videos.all()
+    new_video_views_likes_info = []
+    for video in videos:
+        views, likes = get_video_views_and_likes(video.video_id)
+        vs = VideoStatistics(view_count=views, like_count=likes, video=video)
+        new_video_views_likes_info.append(vs)
+    VideoStatistics.objects.bulk_create(new_video_views_likes_info)
