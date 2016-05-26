@@ -27,7 +27,7 @@ class Video(BaseModel):
         return self.title
 
 
-class ChannelStatistics(BaseModel):
+class ChannelStats(BaseModel):
     total_view_count = models.IntegerField()
     subscriber_count = models.IntegerField()
     video_count = models.IntegerField()
@@ -35,7 +35,8 @@ class ChannelStatistics(BaseModel):
     # date of last upload
 
 
-class VideoStatistics(BaseModel):
+class VideoStats(BaseModel):
     view_count = models.IntegerField()
     like_count = models.IntegerField()
     video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='statistics')
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)

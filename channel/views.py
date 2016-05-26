@@ -3,7 +3,7 @@ from datetime import datetime as dt
 from django.shortcuts import render, redirect
 from django.db.models import Max
 
-from .models import Channel, Video, ChannelStatistics, VideoStatistics
+from .models import Channel, Video, ChannelStats, VideoStats
 from .forms import AddOneChannelForm, AddMultipleChannelsForm
 
 from .yatta import get_playlist_id, get_channel_statistics, \
@@ -13,7 +13,7 @@ from .yatta import get_playlist_id, get_channel_statistics, \
 def channel_list(request):
     latest_stats_ids = Channel.objects.annotate(latest_stats_id=Max('statistics__id')) \
                                       .values_list('latest_stats_id', flat=True)
-    statistics = ChannelStatistics.objects.filter(id__in=latest_stats_ids)
+    statistics = ChannelStats.objects.filter(id__in=latest_stats_ids)
 
     if request.method == 'POST':
         channels = Channel.objects.all()
@@ -21,7 +21,7 @@ def channel_list(request):
         for channel in channels:
             stats = get_channel_statistics(channel.username)
 
-            cs = ChannelStatistics(
+            cs = ChannelStats(
                 total_view_count=stats['viewCount'],
                 subscriber_count=stats['subscriberCount'],
                 video_count=stats['videoCount'],
@@ -29,7 +29,7 @@ def channel_list(request):
             )
             new_stats.append(cs)
 
-        ChannelStatistics.objects.bulk_create(new_stats)
+        ChannelStats.objects.bulk_create(new_stats)
 
     return render(request,
                   'channel/channel_list.html',
@@ -69,7 +69,7 @@ def channel_add_multiple(request):
             Channel.objects.bulk_create(channels_to_add)
 
             # stats = get_channel_statistics(new_channel.username)
-            # cs = ChannelStatistics(
+            # cs = ChannelStats(
             #     total_view_count=stats['viewCount'],
             #     subscriber_count=stats['subscriberCount'],
             #     video_count=stats['videoCount'],
@@ -115,26 +115,31 @@ def channel_videos(request, pk):
                   {'videos': videos, 'channelname': channel.username})
 
 
-def video_info(request, pk):
+def video_stats(request, pk):
     video = Video.objects.get(pk=pk)
-    video_stats = VideoStatistics.objects.filter(video_id=pk)
+    video_stats = VideoStats.objects.filter(video_id=pk)
 
     if request.method == 'POST':
         views, likes = get_video_views_and_likes(video.video_id)
-        vs = VideoStatistics(view_count=views, like_count=likes, video=video)
+        vs = VideoStats(
+            view_count=views,
+            like_count=likes,
+            video=video,
+            channel=video.channel
+        )
         vs.save()
 
-        return redirect('video_info', pk=pk)
+        return redirect('video_stats', pk=pk)
 
     return render(request,
-                  'channel/video_info.html',
+                  'channel/video_stats.html',
                   {'video': video, 'video_stats': video_stats})
 
 
 def channel_chart(request, pk):
     latest_stats_ids = Video.objects.filter(channel=pk).annotate(latest_stats_id=Max('statistics__id')) \
                                                        .values_list('latest_stats_id', flat=True)
-    statistics = VideoStatistics.objects.filter(id__in=latest_stats_ids).order_by('video__published_at')
+    statistics = VideoStats.objects.filter(id__in=latest_stats_ids).order_by('video__published_at')
 
     series = []
     rec = {}
@@ -154,7 +159,7 @@ def channel_chart(request, pk):
 
 def _gather_channel_statistics(new_channel):
     stats = get_channel_statistics(new_channel.username)
-    cs = ChannelStatistics(
+    cs = ChannelStats(
         total_view_count=stats['viewCount'],
         subscriber_count=stats['subscriberCount'],
         video_count=stats['videoCount'],
@@ -182,6 +187,11 @@ def _gather_channel_videos_views_and_likes(new_channel):
     new_video_views_likes_info = []
     for video in videos:
         views, likes = get_video_views_and_likes(video.video_id)
-        vs = VideoStatistics(view_count=views, like_count=likes, video=video)
+        vs = VideoStats(
+            view_count=views,
+            like_count=likes,
+            video=video,
+            channel=video.channel
+        )
         new_video_views_likes_info.append(vs)
-    VideoStatistics.objects.bulk_create(new_video_views_likes_info)
+    VideoStats.objects.bulk_create(new_video_views_likes_info)
