@@ -66,16 +66,13 @@ def channel_add_multiple(request):
             cleaned_channelnames = form.cleaned_data['usernames']
             names_to_add = [cc for cc in cleaned_channelnames.split() if cc not in present_channelnames]
             channels_to_add = [Channel(username=name, playlist_id=get_playlist_id(name)) for name in names_to_add]
-            Channel.objects.bulk_create(channels_to_add)
+            # Channel.objects.bulk_create(channels_to_add)
 
-            # stats = get_channel_statistics(new_channel.username)
-            # cs = ChannelStats(
-            #     total_view_count=stats['viewCount'],
-            #     subscriber_count=stats['subscriberCount'],
-            #     video_count=stats['videoCount'],
-            #     channel_id=new_channel.id,
-            # )
-            # cs.save()
+            for new_channel in channels_to_add:
+                new_channel.save()
+                _gather_channel_statistics(new_channel)
+                _gather_channel_videos_meta_info(new_channel)
+                _gather_channel_videos_views_and_likes(new_channel)
 
             return redirect('channel_list')
 
