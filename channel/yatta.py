@@ -92,7 +92,7 @@ def get_video_views_and_likes(videoId):
     json_items = resp.json()['items']
     stats = json_items[0]['statistics']
 
-    return stats['viewCount'], stats['likeCount']
+    return stats.get('viewCount', 0), stats.get('likeCount', 0)
 
 
 if __name__ == "__main__":
