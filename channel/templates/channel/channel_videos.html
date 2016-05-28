@@ -1,4 +1,14 @@
 {% extends "main/base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+    {{ block.super }}
+    <script>
+        var series = {{ series|safe }}
+    </script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="{% static 'js/chart.js' %}"></script>
+{% endblock head %}
 
 {% block content %}
 <h1>"{{ channelname }}" videos</h1>
@@ -12,18 +22,30 @@
     [please authenticate to update]
 {% endif %}
 
-<table border="1" cellspacing="2" cellpadding="5">
+<table data-toggle="table"
+       data-sort-name="pub_date"
+       data-sort-order="desc"
+       class="table-condensed">
+    <thead>
+        <tr>
+            <th data-field="title" data-sortable="true">Title</th>
+            <th data-sortable="true">View count</th>
+            <th data-sortable="true">Like count</th>
+            <th>Video ID</th>
+            <th data-field="pub_date" data-sortable="true">Published at</th>
+        </tr>
+    </thead>
+    {% for stat in video_stats %}
     <tr>
-        <th>Title</th>
-        <th>Video ID</th>
-        <th>Published at</th>
-    </tr>
-    {% for video in videos %}
-    <tr>
-        <td><a href="{% url 'video_stats' video.id %}">{{ video.title }}</a></td>
-        <td>{{ video.video_id }}</td>
-        <td>{{ video.published_at|date:"Y-m-d, H:i:s" }}</td>
+        <td><a href="{% url 'video_stats' stat.video.id %}">{{ stat.video.title }}</a></td>
+        <td>{{ stat.view_count }}</td>
+        <td>{{ stat.like_count }}</td>
+        <td>{{ stat.video.video_id }}</td>
+        <td>{{ stat.video.published_at|date:"Y-m-d, H:i:s" }}</td>
     </tr>
     {% endfor %}
 </table>
+
+<div id="chart_container"></div>
+
 {% endblock content %}

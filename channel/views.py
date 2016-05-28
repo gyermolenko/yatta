@@ -85,15 +85,31 @@ def channel_add_multiple(request):
 
 
 def channel_videos(request, pk):
-    videos = Video.objects.filter(channel_id=pk).order_by('-published_at')
     channel = Channel.objects.get(pk=pk)
 
+    latest_stats_ids = Video.objects.filter(channel=pk).annotate(latest_stats_id=Max('statistics__id')) \
+                                                       .values_list('latest_stats_id', flat=True)
+    video_stats = VideoStats.objects.filter(id__in=latest_stats_ids).order_by('video__published_at')
+
+    # charts
+    series = []
+    rec = {}
+    rec["name"] = "Channel name"
+    rec["data"] = []
+    for stat in video_stats:
+        published_at = dt.timestamp(stat.video.published_at)*1000
+        view_count = stat.view_count
+        rec["data"].append([published_at, view_count])
+    series.append(rec)
+
     if request.method == 'POST':
-        playlist_id = Channel.objects.get(pk=pk).playlist_id
+        playlist_id = channel.playlist_id
         channel_videos_meta = get_videos_meta_info(playlist_id)
 
-        new_videos = []
+        # ids_from_db = [stat.video.video_id for stat in video_stats]
+        videos = Video.objects.filter(channel_id=pk)
         ids_from_db = [vid.video_id for vid in videos]
+        new_videos = []
         for vid in channel_videos_meta:
             if vid['video_id'] not in ids_from_db:
                 v = Video(
@@ -109,7 +125,9 @@ def channel_videos(request, pk):
 
     return render(request,
                   'channel/channel_videos.html',
-                  {'videos': videos, 'channelname': channel.username})
+                  {'channelname': channel.username,
+                   'video_stats': video_stats,
+                   'series': series})
 
 
 def video_stats(request, pk):

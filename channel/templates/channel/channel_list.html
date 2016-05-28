@@ -17,14 +17,28 @@
     {% endif %}
 </span>
 
-<table border="1" cellspacing="2" cellpadding="5">
-    <tr>
-        <th>Channel</th>
-        <th>Total view count</th>
-        <th>Video count</th>
-        <th>Subscriber count</th>
-        <th>Chart</th>
-    </tr>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if user.is_authenticated %}
+        <button name="button" value="submit" type="submit">Refresh statistics</button>
+    {% else %}
+        [please authenticate to add more]
+    {% endif %}
+</form>
+
+<table data-toggle="table"
+       data-sort-name="channel_name"
+       class="table-condensed">
+    <thead>
+        <tr>
+            <th data-field="channel_name" data-sortable="true">Channel</th>
+            <th data-sortable="true">Total view count</th>
+            <th data-sortable="true">Video count</th>
+            <th data-sortable="true">Subscriber count</th>
+            <th>Chart</th>
+        </tr>
+    </thead>
     {% for stat in statistics %}
     <tr>
         <td><a href="{% url 'channel_videos' stat.channel.id  %}">{{ stat.channel.username }}</a></td>
@@ -35,15 +49,5 @@
     </tr>
     {% endfor %}
 </table>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {% if user.is_authenticated %}
-        <button name="button" value="submit" type="submit">Refresh statistics</button>
-    {% else %}
-        [please authenticate to add more]
-    {% endif %}
-</form>
 
 {% endblock content %}
