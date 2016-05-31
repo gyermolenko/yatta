@@ -23,7 +23,12 @@
 
     <body>
         <div class="page-header">
-            <h1><span><a href="{% url 'channel_list' %}">Channels</a></span></h1>
+            <span class="menu"><a href="{% url 'channel_list' %}">Channels</a></span>
+            {% if user.is_authenticated %}
+                <span class="login">{{ user.username }}</span>
+            {% else %}
+                <span class="login"><a href="{% url 'auth_login' %}">Login</a></span>
+            {% endif %}
         </div>
         <div class="content container">
             <div class="row">
