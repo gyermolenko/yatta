@@ -1,6 +1,7 @@
 Django
 beautifulsoup4
 requests
+django-registration-redux
 
 # DEV only
 # django-debug-toolbar

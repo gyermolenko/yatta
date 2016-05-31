@@ -1,7 +1,14 @@
-.page-header h1 {
-    color: #ffffff;
+.page-header {
+    display: block;
+    border-bottom: 3px solid #ff9900;
+    height: 45px;
     font-size: 15pt;
+    padding: 6px 6px;
+    margin-top: 0px;
+    margin-bottom: 13px;
+    clear: both;
 }
-.page-header h1 span {
-    margin: 18px;
+
+.page-header .login {
+    float: right;
 }
