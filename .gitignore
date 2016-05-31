@@ -5,9 +5,7 @@ main/settings_local.py
 db.sqlite3
 /static
 
-stats/secrets.py
-stats/bookmarks_*.html
-stats/_helper_files/
+/_helpers_private
 
 main/secrets.py
 channel/secrets.py
