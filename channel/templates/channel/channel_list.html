@@ -2,30 +2,19 @@
 
 {% block content %}
 
-<span>
-    {% if user.is_authenticated %}
+{% if user.is_authenticated %}
+    <span>
         <a href="{% url 'channel_add' %}"><span class="glyphicon glyphicon-plus"></span></a>
-    {% else %}
-        [please authenticate to add more]
-    {% endif %}
-</span>
-<span>
-    {% if user.is_authenticated %}
         <a href="{% url 'channel_add_multiple' %}"><span class="glyphicon glyphicon-th-list"></span></a>
-    {% else %}
-        [please authenticate to add more]
-    {% endif %}
-</span>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {% if user.is_authenticated %}
-        <button name="button" value="submit" type="submit">Refresh statistics</button>
-    {% else %}
-        [please authenticate to add more]
-    {% endif %}
-</form>
+    </span>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+            <button name="button" value="submit" type="submit">Refresh statistics</button>
+    </form>
+{% else %}
+    <span>[please authenticate to add more]</span>
+{% endif %}
 
 <table data-toggle="table"
        data-sort-name="channel_name"

@@ -1,14 +1,19 @@
 {% extends "main/base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
+<div class="row">
+<div class="col-md-4">
 <h1>Login</h1>
-    <form method="post" action=".">
-        {% csrf_token %}
-        {{ form.as_p }}
+<form method="post" action=".">
+    {% csrf_token %}
+    {{ form|crispy }}
 
-        <input type="submit" value="Log in" />
-        <input type="hidden" name="next" value="{{ next }}" />
-        </form>
+    <input class"btn btn-primary" type="submit" value="Log in" />
+    <input type="hidden" name="next" value="{{ next }}" />
+</form>
 
-    <p>Not  a member? <a href="{% url 'registration_register' %}">Register</a>!</p>
+<p>Not  a member? <a href="{% url 'registration_register' %}">Register</a>!</p>
+</div>
+</div>
 {% endblock %}

@@ -17,12 +17,15 @@ ALLOWED_HOSTS = ['gyermolenko.pythonanywhere.com',]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'registration',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third party
+    'registration',
+    'crispy_forms',
+    # my apps
     'channel',
 ]
 
@@ -103,9 +106,12 @@ USE_TZ = True
 
 
 ## INSTALLED APPS SETTINGS
-# django-registration-redux ('registration')
+# django-registration-redux
 ACCOUNT_ACTIVATION_DAYS = 2
 LOGIN_REDIRECT_URL = '/'
+
+# django-crispy-forms
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 
 # Static files (CSS, JavaScript, Images)

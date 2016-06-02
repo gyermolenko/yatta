@@ -2,6 +2,7 @@ Django
 beautifulsoup4
 requests
 django-registration-redux
+django-crispy-forms
 
 # DEV only
 # django-debug-toolbar
