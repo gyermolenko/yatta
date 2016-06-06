@@ -109,6 +109,7 @@ USE_TZ = True
 # django-registration-redux
 ACCOUNT_ACTIVATION_DAYS = 2
 LOGIN_REDIRECT_URL = '/'
+REGISTRATION_AUTO_LOGIN = True
 
 # django-crispy-forms
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

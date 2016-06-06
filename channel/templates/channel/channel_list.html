@@ -1,6 +1,10 @@
-{% extends "main/base.html" %}
+{% extends "base.html" %}
+
+{% block title %} Channels list {% endblock %}
 
 {% block content %}
+<div class="row">
+<div class="col-md-12">
 
 {% if user.is_authenticated %}
     <span>
@@ -25,7 +29,6 @@
             <th data-sortable="true">Total view count</th>
             <th data-sortable="true">Video count</th>
             <th data-sortable="true">Subscriber count</th>
-            <th>Chart</th>
         </tr>
     </thead>
     {% for stat in statistics %}
@@ -34,9 +37,10 @@
         <td>{{ stat.total_view_count }}</td>
         <td>{{ stat.video_count }}</td>
         <td>{{ stat.subscriber_count }}</td>
-        <td><a href="{% url 'channel_chart' stat.channel.id %}">link</a></td>
     </tr>
     {% endfor %}
 </table>
 
+</div>
+</div>
 {% endblock content %}

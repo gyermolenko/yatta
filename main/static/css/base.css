@@ -1,3 +1,8 @@
+.navbar-nav>li>a {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 .page-header {
     display: block;
     border-bottom: 3px solid #ff9900;
@@ -9,6 +14,7 @@
     clear: both;
 }
 
-.page-header .login {
-    float: right;
+li.header-item a:hover {
+    background-color: #ffffff;
 }
+

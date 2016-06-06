@@ -151,24 +151,24 @@ def video_stats(request, pk):
                   {'video': video, 'video_stats': video_stats})
 
 
-def channel_chart(request, pk):
-    latest_stats_ids = Video.objects.filter(channel=pk).annotate(latest_stats_id=Max('statistics__id')) \
-                                                       .values_list('latest_stats_id', flat=True)
-    statistics = VideoStats.objects.filter(id__in=latest_stats_ids).order_by('video__published_at')
+# def channel_chart(request, pk):
+#     latest_stats_ids = Video.objects.filter(channel=pk).annotate(latest_stats_id=Max('statistics__id')) \
+#                                                        .values_list('latest_stats_id', flat=True)
+#     statistics = VideoStats.objects.filter(id__in=latest_stats_ids).order_by('video__published_at')
 
-    series = []
-    rec = {}
-    rec["name"] = "Channel name"
-    rec["data"] = []
-    for stat in statistics:
-        published_at = dt.timestamp(stat.video.published_at)*1000
-        view_count = stat.view_count
-        rec["data"].append([published_at, view_count])
-    series.append(rec)
+#     series = []
+#     rec = {}
+#     rec["name"] = "Channel name"
+#     rec["data"] = []
+#     for stat in statistics:
+#         published_at = dt.timestamp(stat.video.published_at)*1000
+#         view_count = stat.view_count
+#         rec["data"].append([published_at, view_count])
+#     series.append(rec)
 
-    return render(request,
-                  'channel/channel_chart.html',
-                  {'statistics': statistics, 'series': series})
+#     return render(request,
+#                   'channel/channel_chart.html',
+#                   {'statistics': statistics, 'series': series})
 
 
 
