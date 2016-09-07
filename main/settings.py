@@ -17,13 +17,15 @@ ALLOWED_HOSTS = ['gyermolenko.pythonanywhere.com',]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    # third party
+    'registration', # should be immediately above 'django.contrib.auth'
+    # native again
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third party
-    'registration',
     'crispy_forms',
     # my apps
     'channel',

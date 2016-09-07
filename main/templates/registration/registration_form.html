@@ -2,14 +2,33 @@
 {% load crispy_forms_tags %}
 {% block title %} Registration {% endblock %}
 
+{% block javascript %}
+    <script>
+        $("#id_username").change(function () {
+            var form = $(this).closest("form");
+
+            $.ajax({
+                url: form.attr("data-validate-username-url"),
+                data: form.serialize(),
+                dataType: 'json',
+                success: function (data) {
+                    if (data.is_taken) {
+                        alert(data.error_message);
+                    }
+                }
+            });
+
+        });
+    </script>
+{% endblock javascript %}
+
 {% block content %}
 <div class="row">
 <div class="col-md-4">
     <h1>Register</h1>
-    <form method="post" action=".">
+    <form method="post" data-validate-username-url="{% url 'ajax_validate_username' %}" action=".">
         {% csrf_token %}
         {{ form|crispy }}
-
         <input class="btn btn-primary" type="submit" value="Submit" />
     </form>
 </div>
