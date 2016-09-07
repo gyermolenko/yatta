@@ -1,14 +1,11 @@
 *.pyc
 env/
 
-main/settings_local.py
-db.sqlite3
-/static
-
-/_helpers_private
-
 main/secrets.py
-channel/secrets.py
-channel/bookmarks_*.html
-channel/_helper_files/
+main/settings_local.py
+
+db.sqlite3
+
+/static
+/_helpers_private
 
