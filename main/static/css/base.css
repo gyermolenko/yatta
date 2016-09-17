@@ -18,3 +18,7 @@ li.header-item a:hover {
     background-color: #ffffff;
 }
 
+.ajax-error {
+    color: red;
+    font-weight: bold;
+}
