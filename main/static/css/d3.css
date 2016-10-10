@@ -1,0 +1,9 @@
+path.d3-path-videos {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+
+circle.d3-circle-videos {
+    fill: red;
+}

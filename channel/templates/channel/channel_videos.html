@@ -7,7 +7,9 @@
         var series = {{ series|safe }}
     </script>
     <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="{% static 'js/chart.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/d3.css' %}">
 {% endblock head %}
 
 {% block content %}
@@ -47,5 +49,82 @@
 </table>
 
 <div id="chart_container"></div>
+
+<script>
+
+    var data = {{ d3data }};
+    var parseDate = function(d0) { return new Date(d0); }
+
+    var margin = {top: 20, right: 50, bottom: 20, left: 80},
+        canvas_width = 1250,
+        canvas_height = 400,
+        graph_width = canvas_width - margin.left - margin.right,
+        graph_height = canvas_height - margin.top - margin.bottom;
+
+    var xScale = d3.scaleTime()
+                   .domain([new Date(data[0][0]), new Date(data[data.length - 1][0])])
+                   .rangeRound([0, graph_width]);
+
+    var yScale = d3.scaleLinear()
+                   .domain([0, d3.max(data, function(rec) { return rec[1]; } )])
+                   .rangeRound([graph_height, 0]);
+
+    var canvas = d3.selectAll("div").filter(".content").filter(".container")
+                   .append("svg")
+                       .attr("width", canvas_width)
+                       .attr("height", canvas_height)
+                   .append("g")
+                       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var lineFunc = d3.line()
+                     .x(function(d) { return xScale(parseDate(d[0])); })
+                     .y(function(d) { return yScale(d[1]); });
+
+    canvas.append("g")
+              .attr("transform", "translate(0," + graph_height +")")
+              .call(d3.axisBottom(xScale));
+    canvas.append("g")
+              .call(d3.axisLeft(yScale));
+
+    canvas.append("path")
+              .attr("class", "d3-path-videos")
+              .data([data])
+              .attr("d", lineFunc);
+
+    // highlight peaks with circles for visibility
+    canvas.selectAll("dot")
+          .data(data)
+          .enter().append("circle")
+              .attr("class", "d3-circle-videos")
+              .attr("r", 4)
+              .attr("cx", function(d) { return xScale(parseDate(d[0])); })
+              .attr("cy", function(d) { return yScale(d[1]); });
+
+    // Graph #2. The more likes - the bigger circle is
+    var canvas2 = d3.selectAll("div").filter(".content").filter(".container")
+                   .append("svg")
+                       .attr("width", canvas_width)
+                       .attr("height", canvas_height)
+                   .append("g")
+                       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var rScale = d3.scaleLinear()
+                   .domain([0, d3.max(data, function(rec) { return rec[2]; } )])
+                   .rangeRound([0, 15]);
+
+    canvas2.append("g")
+               .attr("transform", "translate(0," + graph_height +")")
+               .call(d3.axisBottom(xScale));
+    canvas2.append("g")
+               .call(d3.axisLeft(yScale));
+
+    canvas2.selectAll("dot")
+          .data(data)
+          .enter().append("circle")
+              .attr("class", "d3-circle-videos")
+              .attr("r", function(d) { return rScale(d[2]); })
+              .attr("cx", function(d) { return xScale(parseDate(d[0])); })
+              .attr("cy", function(d) { return yScale(d[1]); });
+
+</script>
 
 {% endblock content %}

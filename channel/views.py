@@ -91,16 +91,24 @@ def channel_videos(request, pk):
                                                        .values_list('latest_stats_id', flat=True)
     video_stats = VideoStats.objects.filter(id__in=latest_stats_ids).order_by('video__published_at')
 
-    # charts
+    # highcharts
     series = []
     rec = {}
     rec["name"] = "Channel name"
     rec["data"] = []
     for stat in video_stats:
-        published_at = dt.timestamp(stat.video.published_at)*1000
+        published_at = dt.timestamp(stat.video.published_at) * 1000
         view_count = stat.view_count
         rec["data"].append([published_at, view_count])
     series.append(rec)
+
+    # d3 charts
+    d3data = []
+    for stat in video_stats:
+        published_at = dt.timestamp(stat.video.published_at) * 1000
+        view_count = stat.view_count
+        like_count = stat.like_count
+        d3data.append([published_at, view_count, like_count])
 
     if request.method == 'POST':
         playlist_id = channel.playlist_id
@@ -125,9 +133,12 @@ def channel_videos(request, pk):
 
     return render(request,
                   'channel/channel_videos.html',
-                  {'channelname': channel.username,
-                   'video_stats': video_stats,
-                   'series': series})
+                  {
+                      'channelname': channel.username,
+                      'video_stats': video_stats,
+                      'series': series,
+                      'd3data': d3data,
+                  })
 
 
 def video_stats(request, pk):
